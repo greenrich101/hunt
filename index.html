@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunt Conditions — The Summit, QLD</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #0f1923;
+            color: #d0d8e0;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .container { max-width: 480px; margin: 0 auto; }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 16px 0 14px;
+            border-bottom: 1px solid #1e2e3e;
+            margin-bottom: 16px;
+        }
+        .header h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .header .location {
+            font-size: 13px;
+            color: #6a7a8a;
+            margin-top: 4px;
+        }
+        .header .date {
+            font-size: 12px;
+            color: #4a5a6a;
+            margin-top: 2px;
+        }
+
+        /* Sun times */
+        .sun-times {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 16px;
+            padding: 14px;
+            background: #141f2b;
+            border-radius: 12px;
+            border: 1px solid #1e2e3e;
+        }
+        .sun-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 4px;
+        }
+        .sun-time .icon { font-size: 14px; }
+        .sun-time .label {
+            font-size: 11px;
+            color: #5a6a7a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sun-time .value {
+            font-size: 15px;
+            color: #e8e8e8;
+            font-weight: 600;
+        }
+
+        /* Approach label on each row */
+        .hour-row .approach {
+            display: block;
+            font-size: 11px;
+            color: #4a7a5a;
+        }
+        .golden-window .hour-row .approach {
+            color: #8a7a40;
+        }
+
+        /* Timeline */
+        .timeline-label {
+            font-size: 11px;
+            color: #4a5a6a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .hour-row {
+            display: grid;
+            grid-template-columns: 64px 30px 1fr auto;
+            align-items: center;
+            padding: 9px 10px;
+            border-radius: 6px;
+            margin-bottom: 1px;
+            font-size: 13px;
+        }
+        .hour-row .time {
+            font-weight: 500;
+            color: #8a9ab0;
+        }
+        .hour-row .arrow-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hour-row .arrow-cell svg { width: 18px; height: 18px; }
+        .hour-row .dir-label {
+            font-size: 12px;
+            color: #5a6a7a;
+            padding-left: 4px;
+        }
+        .hour-row .speed {
+            font-weight: 600;
+            color: #8a9ab0;
+            text-align: right;
+            font-size: 13px;
+        }
+        .hour-row .speed .unit {
+            font-weight: 400;
+            font-size: 11px;
+            color: #4a5a6a;
+        }
+
+        /* Now marker */
+        .now-row {
+            background: rgba(74, 222, 128, 0.06);
+            border-left: 3px solid #4ade80;
+        }
+        .now-row .time { color: #4ade80 !important; }
+
+        /* Sun event rows */
+        .sun-event-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            margin-bottom: 1px;
+            font-size: 12px;
+            color: #5a6a7a;
+        }
+        .sun-event-row .sun-line {
+            flex: 1;
+            height: 1px;
+            background: #2a3a4a;
+        }
+        .sun-event-row.first-light { color: #7a8aaa; }
+        .sun-event-row.sunrise-row { color: #d4a040; }
+        .sun-event-row.sunset-row { color: #d48040; }
+        .sun-event-row.last-light { color: #7a6a9a; }
+
+        /* Golden window */
+        .golden-window {
+            background: linear-gradient(145deg, #231e0e, #1a1608);
+            border: 1px solid #3a3010;
+            border-radius: 14px;
+            padding: 14px 10px;
+            margin: 8px 0;
+        }
+        .golden-window .gw-label {
+            font-size: 11px;
+            color: #c49a20;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .golden-window .hour-row {
+            padding: 13px 10px;
+            font-size: 15px;
+            background: rgba(196, 154, 32, 0.04);
+            border-radius: 8px;
+            margin-bottom: 3px;
+            grid-template-columns: 64px 34px 1fr auto;
+        }
+        .golden-window .hour-row .time {
+            color: #e8c040;
+            font-weight: 700;
+        }
+        .golden-window .hour-row .arrow-cell svg { width: 22px; height: 22px; }
+        .golden-window .hour-row .dir-label {
+            color: #a89040;
+            font-size: 13px;
+        }
+        .golden-window .hour-row .gust {
+            display: block;
+            font-size: 11px;
+            color: #706030;
+            font-weight: 400;
+        }
+        .golden-window .hour-row .speed {
+            color: #e8c040;
+        }
+        .golden-window .hour-row .speed .unit { color: #8a7a40; }
+
+        .golden-marker {
+            text-align: center;
+            padding: 5px 0;
+            font-size: 11px;
+            color: #c49a20;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Loading / Error */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #4a5a6a;
+        }
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #1e2e3e;
+            border-top-color: #4ade80;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error-box {
+            text-align: center;
+            padding: 40px;
+            color: #cc4444;
+            font-size: 14px;
+        }
+        .error-box .detail {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="loading">
+        <div class="spinner"></div>
+        Loading conditions...
+    </div>
+</div>
+
+<script>
+const CONFIG = {
+    lat: -27.97,
+    lng: 152.05,
+    tz: 'Australia/Brisbane',
+    tzOffset: 10, // AEST = UTC+10, no DST
+    location: 'The Summit, 4377 QLD'
+};
+
+// --- Sun calculations ---
+function getTwilightOffset(lat, dayOfYear) {
+    const rad = Math.PI / 180;
+    const dec = -23.45 * Math.cos(rad * (360 / 365) * (dayOfYear + 10));
+
+    function haForElevation(elev) {
+        const cos = (Math.sin(elev * rad) - Math.sin(lat * rad) * Math.sin(dec * rad))
+                  / (Math.cos(lat * rad) * Math.cos(dec * rad));
+        if (Math.abs(cos) > 1) return null;
+        return Math.acos(cos) * (180 / Math.PI);
+    }
+
+    const haSunset = haForElevation(-0.833);
+    const haDusk = haForElevation(-6);
+    if (!haSunset || !haDusk) return 25;
+    return (haDusk - haSunset) * 4; // minutes
+}
+
+function dayOfYear(date) {
+    const start = new Date(date.getFullYear(), 0, 0);
+    return Math.floor((date - start) / 86400000);
+}
+
+// --- Compass ---
+function bearingToCompass(deg) {
+    const d = ['N','NNE','NE','ENE','E','ESE','SE','SSE',
+               'S','SSW','SW','WSW','W','WNW','NW','NNW'];
+    return d[Math.round(((deg % 360) + 360) % 360 / 22.5) % 16];
+}
+
+function bearingToCompassFull(deg) {
+    const d = ['North','North-Northeast','Northeast','East-Northeast',
+               'East','East-Southeast','Southeast','South-Southeast',
+               'South','South-Southwest','Southwest','West-Southwest',
+               'West','West-Northwest','Northwest','North-Northwest'];
+    return d[Math.round(((deg % 360) + 360) % 360 / 22.5) % 16];
+}
+
+// --- Time formatting ---
+function fmt(date) {
+    return date.toLocaleTimeString('en-AU', {
+        hour: 'numeric', minute: '2-digit', hour12: true, timeZone: CONFIG.tz
+    });
+}
+
+// --- SVG helpers ---
+function windArrow(dirFrom, color) {
+    const rot = (dirFrom + 180) % 360; // point where wind blows TO
+    return `<svg viewBox="0 0 24 24" style="transform:rotate(${rot}deg)">
+        <path d="M12 3L8 15l4-3 4 3z" fill="${color}"/>
+    </svg>`;
+}
+
+
+// --- Fetch ---
+async function fetchWeather() {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.lat}&longitude=${CONFIG.lng}`
+        + `&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m`
+        + `&daily=sunrise,sunset`
+        + `&wind_speed_unit=kmh&timezone=${CONFIG.tz}&forecast_days=2`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('Weather API failed');
+    return r.json();
+}
+
+// --- Main ---
+async function init() {
+    try {
+        const w = await fetchWeather();
+        const now = new Date();
+
+        // Parse sunrise/sunset from API (local time strings)
+        const tzSuffix = `+${String(CONFIG.tzOffset).padStart(2,'0')}:00`;
+
+        function parseLocal(str) { return new Date(str + tzSuffix); }
+
+        const sunToday = {
+            sunrise: parseLocal(w.daily.sunrise[0]),
+            sunset:  parseLocal(w.daily.sunset[0])
+        };
+        const sunTomorrow = {
+            sunrise: parseLocal(w.daily.sunrise[1]),
+            sunset:  parseLocal(w.daily.sunset[1])
+        };
+
+        // Calculate first light / last light
+        const doyToday = dayOfYear(sunToday.sunrise);
+        const doyTomorrow = dayOfYear(sunTomorrow.sunrise);
+        const offsetToday = getTwilightOffset(CONFIG.lat, doyToday) * 60000;
+        const offsetTomorrow = getTwilightOffset(CONFIG.lat, doyTomorrow) * 60000;
+
+        sunToday.dawn = new Date(sunToday.sunrise.getTime() - offsetToday);
+        sunToday.dusk = new Date(sunToday.sunset.getTime() + offsetToday);
+        sunTomorrow.dawn = new Date(sunTomorrow.sunrise.getTime() - offsetTomorrow);
+        sunTomorrow.dusk = new Date(sunTomorrow.sunset.getTime() + offsetTomorrow);
+
+        // Display sun times (today if before dusk, else tomorrow)
+        const displaySun = now < sunToday.dusk ? sunToday : sunTomorrow;
+
+        // Build next 24 hours
+        const hours = [];
+        const times = w.hourly.time;
+        let startIdx = 0;
+        for (let i = 0; i < times.length; i++) {
+            if (parseLocal(times[i]) >= new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours())) {
+                startIdx = i;
+                break;
+            }
+        }
+        const windowEnd = parseLocal(times[Math.min(startIdx + 23, times.length - 1)]);
+
+        // Collect all peak windows (1hr before/after sunrise AND sunset)
+        const peakDefs = [];
+        [{sun: sunToday, day: 'today'}, {sun: sunTomorrow, day: 'tomorrow'}].forEach(({sun}) => {
+            peakDefs.push({ type: 'morning', label: 'AM Peak', center: sun.sunrise, markerLabel: 'Sunrise' });
+            peakDefs.push({ type: 'evening', label: 'PM Peak', center: sun.sunset, markerLabel: 'Sunset' });
+        });
+
+        // Filter to windows that overlap our 24h range
+        const HR = 3600000;
+        const peakWindows = peakDefs
+            .map(p => ({ ...p, start: new Date(p.center.getTime() - HR), end: new Date(p.center.getTime() + HR) }))
+            .filter(p => p.end >= parseLocal(times[startIdx]) && p.start <= windowEnd);
+
+        for (let i = startIdx; i < startIdx + 24 && i < times.length; i++) {
+            const t = parseLocal(times[i]);
+            let golden = false, peakType = null;
+            for (const pw of peakWindows) {
+                if (t >= pw.start && t <= pw.end) {
+                    golden = true;
+                    peakType = pw;
+                    break;
+                }
+            }
+            hours.push({
+                time: t,
+                speed: Math.round(w.hourly.wind_speed_10m[i]),
+                dir: w.hourly.wind_direction_10m[i],
+                gust: Math.round(w.hourly.wind_gusts_10m[i]),
+                golden, peakType,
+                isNow: i === startIdx
+            });
+        }
+
+        // Sun events to inject into timeline
+        const sunEvents = [];
+        [{sun: sunToday}, {sun: sunTomorrow}].forEach(({sun}) => {
+            sunEvents.push({ time: sun.dawn,    label: 'First Light',  cls: 'first-light' });
+            sunEvents.push({ time: sun.sunrise, label: 'Sunrise',      cls: 'sunrise-row' });
+            sunEvents.push({ time: sun.sunset,  label: 'Sunset',       cls: 'sunset-row' });
+            sunEvents.push({ time: sun.dusk,    label: 'Last Light',   cls: 'last-light' });
+        });
+
+        // Find approach direction for each peak window
+        for (const pw of peakWindows) {
+            const windowHours = hours.filter(h => h.peakType === pw);
+            let closest = windowHours[0] || hours[0];
+            let minDiff = Infinity;
+            for (const h of windowHours) {
+                const diff = Math.abs(h.time - pw.center);
+                if (diff < minDiff) { minDiff = diff; closest = h; }
+            }
+            pw.peakHour = closest;
+            pw.approachBearing = (closest.dir + 180) % 360;
+            pw.approachLabel = bearingToCompassFull(pw.approachBearing);
+        }
+
+        render({ hours, displaySun, peakWindows, sunEvents, now });
+
+    } catch (err) {
+        document.getElementById('app').innerHTML =
+            `<div class="error-box">Failed to load conditions<div class="detail">${err.message}</div></div>`;
+    }
+}
+
+function render(d) {
+    const dateStr = d.now.toLocaleDateString('en-AU', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: CONFIG.tz
+    });
+
+    // Sort sun events by time
+    d.sunEvents.sort((a, b) => a.time - b.time);
+
+    // Build timeline rows, injecting sun events at the right positions
+    let timelineHTML = '';
+    let inGolden = false;
+    let currentPW = null;
+    let goldenBuffer = '';
+    const evts = [...d.sunEvents].filter(e => e.time >= d.hours[0]?.time && e.time <= d.hours[d.hours.length-1]?.time);
+    evts.sort((a, b) => a.time - b.time);
+
+    function sunEventBefore(hourTime) {
+        let html = '';
+        while (evts.length && evts[0].time < hourTime) {
+            const e = evts.shift();
+            const row = `<div class="sun-event-row ${e.cls}">
+                <span class="sun-line"></span>
+                ${e.label} ${fmt(e.time)}
+                <span class="sun-line"></span>
+            </div>`;
+            if (inGolden) goldenBuffer += row;
+            else html += row;
+        }
+        return html;
+    }
+
+    function hourRow(h, isGolden) {
+        const arrowColor = isGolden ? '#c49a20' : (h.isNow ? '#4ade80' : '#5a6a7a');
+        const timeLabel = h.isNow ? 'Now' : fmt(h.time);
+        const nowCls = h.isNow ? ' now-row' : '';
+        const gustHTML = isGolden ? `<span class="gust">Gusts ${h.gust}</span>` : '';
+        const approachDir = bearingToCompass((h.dir + 180) % 360);
+
+        return `<div class="hour-row${nowCls}">
+            <div class="time">${timeLabel}</div>
+            <div class="arrow-cell">${windArrow(h.dir, arrowColor)}</div>
+            <div class="dir-label">${bearingToCompass(h.dir)} ${gustHTML}<span class="approach">Approach ${approachDir}</span></div>
+            <div class="speed">${h.speed} <span class="unit">km/h</span></div>
+        </div>`;
+    }
+
+    for (const h of d.hours) {
+        const events = sunEventBefore(h.time);
+        timelineHTML += events;
+
+        // Start golden window
+        if (h.golden && !inGolden) {
+            inGolden = true;
+            currentPW = h.peakType;
+            goldenBuffer = `<div class="golden-window"><div class="gw-label"><span>&#9733;</span> ${currentPW.label}</div>`;
+        }
+
+        if (inGolden) {
+            goldenBuffer += hourRow(h, true);
+            if (currentPW && Math.abs(h.time - currentPW.center) < 1800000) {
+                goldenBuffer += `<div class="golden-marker">&#9673; ${currentPW.markerLabel} ${fmt(currentPW.center)} &#9673;</div>`;
+                currentPW._markerShown = true;
+            }
+        } else {
+            timelineHTML += hourRow(h, false);
+        }
+
+        // End golden window
+        if (!h.golden && inGolden) {
+            inGolden = false;
+            goldenBuffer += '</div>';
+            timelineHTML += goldenBuffer;
+            goldenBuffer = '';
+            currentPW = null;
+        }
+    }
+    if (inGolden) {
+        goldenBuffer += '</div>';
+        timelineHTML += goldenBuffer;
+    }
+
+    document.getElementById('app').innerHTML = `
+        <div class="header">
+            <h1>Hunt Conditions</h1>
+            <div class="location">${CONFIG.location}</div>
+            <div class="date">${dateStr}</div>
+        </div>
+
+        <div class="sun-times">
+            <div class="sun-time">
+                <span class="icon">&#9684;</span>
+                <div><div class="label">First Light</div><div class="value">${fmt(d.displaySun.dawn)}</div></div>
+            </div>
+            <div class="sun-time">
+                <span class="icon">&#9788;</span>
+                <div><div class="label">Sunrise</div><div class="value">${fmt(d.displaySun.sunrise)}</div></div>
+            </div>
+            <div class="sun-time">
+                <span class="icon">&#9788;</span>
+                <div><div class="label">Sunset</div><div class="value">${fmt(d.displaySun.sunset)}</div></div>
+            </div>
+            <div class="sun-time">
+                <span class="icon">&#9685;</span>
+                <div><div class="label">Last Light</div><div class="value">${fmt(d.displaySun.dusk)}</div></div>
+            </div>
+        </div>
+
+        <div class="timeline-label">Next 24 Hours</div>
+        ${timelineHTML}
+    `;
+}
+
+init();
+</script>
+</body>
+</html>
